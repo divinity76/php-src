@@ -1037,6 +1037,13 @@ static void init_request_info(void)
 				 * to. */
 				memmove(env_script_filename, p, strlen(p) + 1);
 				apache_was_here = 1;
+				// If DocumentRoot contains cyrillic characters, then the cyrillic characters are urlencoded by apache, and we need to decode them, for example with
+				// DocumentRoot /home/hans/web/cyrillicрф.ratma.net/public_html
+				// env_script_filename contains /home/hans/web/cyrillic%D1%80%D1%84.ratma.net/public_html/index.php.
+				// and we must decode it to /home/hans/web/cyrillicрф.ratma.net/public_html/index.php.
+				if(memchr(env_script_filename, '%', plen) != NULL){
+					plen = php_url_decode(env_script_filename, plen);
+				}
 			}
 			/* ignore query string if sent by Apache (RewriteRule) */
 			p = strchr(env_script_filename, '?');
