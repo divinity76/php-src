@@ -1,5 +1,9 @@
 --TEST--
 GH-23457 (imagebmp() writes to the stream one byte at a time)
+--SKIPIF--
+<?php
+if (getenv("SKIP_SLOW_TESTS")) die("skip slow test");
+?>
 --EXTENSIONS--
 gd
 --FILE--
